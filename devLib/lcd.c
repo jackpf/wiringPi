@@ -311,6 +311,12 @@ void lcdPutchar (const int fd, unsigned char data)
 {
   struct lcdDataStruct *lcd = lcds [fd] ;
 
+  // If newline character, go to the next line
+  if (data == '\n') {
+    lcdNextLine(fd);
+    return;
+  }
+
   digitalWrite (lcd->rsPin, 1) ;
   sendDataCmd  (lcd, data) ;
 
@@ -322,6 +328,22 @@ void lcdPutchar (const int fd, unsigned char data)
     
     putCommand (lcd, lcd->cx + (LCD_DGRAM | rowOff [lcd->cy])) ;
   }
+}
+
+
+/**
+ * lcdNextLine:
+ *  Set the cursor to the start of the next line, or the first line if we're
+ *  already on the last row.
+ */
+void lcdNextLine(const int fd)
+{
+  struct lcdDataStruct *lcd = lcds[fd];
+
+  lcd->cx = 0;
+  lcd->cy = lcd->cy + 1 < lcd->rows ? lcd->cy + 1 : 0;
+
+  putCommand(lcd, lcd->cx + (LCD_DGRAM | rowOff [lcd->cy]));
 }
 
 
