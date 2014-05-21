@@ -136,6 +136,7 @@ int wiringPiI2CRead (int fd)
 int wiringPiI2CReadReg8 (int fd, int reg)
 {
   union i2c_smbus_data data;
+  data.byte = -1;
 
   if (i2c_smbus_access (fd, I2C_SMBUS_READ, reg, I2C_SMBUS_BYTE_DATA, &data))
     return -1 ;
@@ -146,6 +147,7 @@ int wiringPiI2CReadReg8 (int fd, int reg)
 int wiringPiI2CReadReg16 (int fd, int reg)
 {
   union i2c_smbus_data data;
+  data.word = -1;
 
   if (i2c_smbus_access (fd, I2C_SMBUS_READ, reg, I2C_SMBUS_WORD_DATA, &data))
     return -1 ;
